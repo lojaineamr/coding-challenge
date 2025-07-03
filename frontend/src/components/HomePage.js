@@ -5,6 +5,8 @@ import AverageMetricsChart from './AverageMetricsChart';
 
 const HomePage = () => {
   const [recentSessions, setRecentSessions] = useState([]);
+  const [playerName, setPlayerName] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,11 +43,58 @@ const HomePage = () => {
     }
   };
 
+  const handleCreateSession = async (e) => {
+    e.preventDefault();
+    if (!playerName.trim()) return;
+
+    setIsCreating(true);
+    try {
+      // Create session with just player name - backend will generate random metrics
+      const response = await axios.post('/api/sessions', {
+        playerName: playerName.trim()
+      });
+      
+      const { sessionId } = response.data;
+      navigate(`/sessions/${sessionId}`);
+    } catch (error) {
+      console.error('Error creating session:', error);
+      alert('Failed to create session. Please try again.');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   return (
     <div className="home-container">
       <div className="welcome-section">
         <h2>Welcome to Performance Tracker</h2>
         <p>Track athletic performance and assess injury risks with advanced analytics</p>
+      </div>
+      
+      <div className="create-session-form">
+        <h3>Quick Session Creation</h3>
+        <p>Enter an athlete's name to create a session with random performance metrics</p>
+        <form onSubmit={handleCreateSession}>
+          <div className="form-group">
+            <label htmlFor="playerName">Athlete Name</label>
+            <input
+              type="text"
+              id="playerName"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              placeholder="Enter athlete's name"
+              required
+              disabled={isCreating}
+            />
+          </div>
+          <button 
+            type="submit" 
+            className="btn-primary"
+            disabled={isCreating || !playerName.trim()}
+          >
+            {isCreating ? 'Creating Session...' : 'Create Performance Session'}
+          </button>
+        </form>
       </div>
       
       <AverageMetricsChart />
