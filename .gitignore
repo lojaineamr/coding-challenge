@@ -85,3 +85,27 @@ wheels/
 venv/
 env/
 ENV/
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Build directories
+frontend/build/
+backend/dist/
+
+# Package lock files (optional - uncomment if you want to ignore them)
+# package-lock.json
+# yarn.lock
+
+# IDE specific files
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
