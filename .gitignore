@@ -109,3 +109,7 @@ backend/dist/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Setup scripts
+setup.bat
+setup.sh

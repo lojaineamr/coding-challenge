@@ -10,7 +10,6 @@ A full-stack web application that provides coaches with comprehensive performanc
 - **RESTful API**: Clean API endpoints for session management and data retrieval
 - **Responsive Design**: Modern, mobile-friendly interface built with React
 
-## Technology Stack
 
 ### Backend
 - **Node.js** - Runtime environment
@@ -95,7 +94,10 @@ Creates a new performance session with optional custom metrics or generated mock
 }
 ```
 
-**Note:** The `metrics` field is optional. If not provided, mock data will be generated. If provided, any missing metrics will default to 0.
+**Note:** The `metrics` field is optional, when creating an athlete.
+If provided, any missing metrics will default to 0.
+
+If not provided, and athlete is being created from the homepage, mock data will be generated. 
 
 **Response:**
 ```json
@@ -162,12 +164,11 @@ Deletes a specific session by ID.
 ### GET /api/sessions
 Retrieves all sessions (summary view).
 
-## Design Choices
+## Overview
 
 ### Database Design
-- **SQLite**: Chosen for simplicity and portability - perfect for development and small-scale deployments
-- **JSON Storage**: Metrics and keypoint loads stored as JSON for flexibility in data structure
-- **Auto-incrementing IDs**: Simple, reliable primary key strategy
+- **SQLite**
+- **JSON Storage**
 
 ### Visualization Implementation
 - **CSS Positioning**: Used absolute positioning for precise placement of load indicators on the body silhouette
@@ -176,7 +177,6 @@ Retrieves all sessions (summary view).
 
 ### Mock Data Strategy
 - **Realistic Ranges**: All generated values fall within realistic athletic performance ranges
-- **Varied Distribution**: Random generation ensures diverse test scenarios
 - **Consistent Units**: Standardized units across all metrics for clarity
 
 ## Installation & Setup
@@ -231,9 +231,8 @@ The application will open at `http://localhost:3000`
 ## Usage
 
 1. **Create a Session**: 
-   - Enter an athlete's name on the home page
-   - Optionally fill in any performance metrics (unfilled metrics default to 0)
-   - Click "Create Performance Session"
+   - Enter an athlete's name on the home page to get the randomized metrics.
+   - You can also create all athlete's performance metrics manually from "crate athlete button", Optionally fill in any performance metrics (unfilled metrics default to 0)
 2. **View Analysis**: The system will use your entered data or generate mock data and redirect you to the performance snapshot
 3. **Edit Data**: Click the edit button (pencil icon) to modify athlete name and performance metrics
 4. **Save Changes**: After editing, click the save button (checkmark) to persist changes or cancel button (X) to discard
@@ -242,39 +241,20 @@ The application will open at `http://localhost:3000`
 7. **Navigate Sessions**: Use the recent sessions list to view previous analyses
 8. **Delete Sessions**: Click the red trash bin button on any session card or in the details view to delete unwanted sessions
 
-## Development
-
-### Running in Development Mode
-
-Backend (with auto-reload):
-```bash
-cd backend
-npm run dev
-```
-
-Frontend (with hot reload):
-```bash
-cd frontend
-npm start
-```
-
-### Database Management
-
-Reset database:
-```bash
-cd backend
-rm performance_tracker.sqlite
-npm run init-db
-```
-
 ## Project Structure
 
 ```
 ├── backend/
+│   ├── controllers/
+│   │   └── performanceSessionController.js   
+│   ├── models/
+│   │   └── performanceSessionModel.js        # Database operations for sessions
+│   ├── routes/
+│   │   └── performanceSessionRoutes.js       # API endpoints for sessions
 │   ├── scripts/
-│   │   └── initDatabase.js     # Database initialization
+│   │   └── initDatabase.js                   # Database initialization
 │   ├── package.json
-│   ├── server.js               # Main server file
+│   ├── server.js                             # Main server file 
 │   └── performance_tracker.sqlite
 ├── frontend/
 │   ├── public/
@@ -293,20 +273,19 @@ npm run init-db
 └── README.md
 ```
 
+## Screenshots
+
+### Performance Dashboard
+![Dashboard](./screenshots/dashboard.png)
+
+### Performance Snapshot
+![Snapshot](./screenshots/snapshot.png)
+
+### Create Athlete
+![Injury Risk](./screenshots/createAthlete.png)
+
 ## Future Enhancements
 
-- Real biomechanical data integration
-- Historical trend analysis
-- Comparative athlete benchmarking
 - Export functionality for reports
-- Advanced filtering and search
+- Filtering and search
 - User authentication and roles
-- Real-time data streaming
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
