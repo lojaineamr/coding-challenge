@@ -89,7 +89,7 @@ const HomePage = () => {
             Welcome to Performance Tracker
           </Typography>
           <Typography variant="h6" color="text.secondary">
-            Track athletic performance and assess injury risks
+            Track athlete's performance and assess injury risks
           </Typography>
         </Box>
         
