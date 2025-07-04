@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  Breadcrumbs,
+  Link as MuiLink,
+  CircularProgress
+} from '@mui/material';
+import { ArrowBack as ArrowBackIcon, PersonAdd as PersonAddIcon } from '@mui/icons-material';
 import MetricsForm from './MetricsForm';
 
 const AthleteCreation = () => {
@@ -50,51 +62,82 @@ const AthleteCreation = () => {
   };
 
   return (
-    <div className="athlete-creation-container">
-      <div className="page-header">
-        <Link to="/" className="back-button">← Back to Home</Link>
-        <h2>Create New Athlete</h2>
-        <p>Enter athlete information and performance metrics</p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="athlete-creation-form">
-        <div className="basic-info-section">
-          <h3>Basic Information</h3>
-          <div className="form-group">
-            <label htmlFor="playerName">Athlete Name *</label>
-            <input
-              type="text"
-              id="playerName"
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              placeholder="Enter athlete's full name"
-              required
-              disabled={isLoading}
-              className="athlete-name-input"
-            />
-          </div>
-        </div>
-        
-        <MetricsForm 
-          metrics={metrics}
-          onMetricChange={handleMetricChange}
-          disabled={isLoading}
-        />
-        
-        <div className="form-actions">
-          <Link to="/" className="btn-secondary">
-            Cancel
-          </Link>
-          <button 
-            type="submit" 
-            className="btn-primary"
-            disabled={isLoading || !playerName.trim()}
+    <Container maxWidth="md">
+      <Box sx={{ py: 4 }}>
+        <Breadcrumbs sx={{ mb: 3 }}>
+          <MuiLink 
+            component={Link} 
+            to="/" 
+            color="inherit" 
+            underline="hover"
+            sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
           >
-            {isLoading ? 'Creating Athlete...' : 'Create Athlete'}
-          </button>
-        </div>
-      </form>
-    </div>
+            <ArrowBackIcon fontSize="small" />
+            Home
+          </MuiLink>
+          <Typography color="text.primary">Create Athlete</Typography>
+        </Breadcrumbs>
+
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h3" component="h2" gutterBottom>
+            Create New Athlete
+          </Typography>
+          <Typography variant="h6" color="text.secondary">
+            Enter athlete information and performance metrics
+          </Typography>
+        </Box>
+
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Box component="form" onSubmit={handleSubmit}>
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h5" component="h3" gutterBottom>
+                Basic Information
+              </Typography>
+              <TextField
+                fullWidth
+                label="Athlete Name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                placeholder="Enter athlete's full name"
+                required
+                disabled={isLoading}
+                variant="outlined"
+                sx={{ mt: 2 }}
+              />
+            </Box>
+            
+            <MetricsForm 
+              metrics={metrics}
+              onMetricChange={handleMetricChange}
+              disabled={isLoading}
+            />
+            
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 4 }}>
+              <Button 
+                component={Link}
+                to="/"
+                variant="outlined"
+                color="secondary"
+                size="large"
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                variant="contained"
+                color="primary"
+                size="large"
+                disabled={isLoading || !playerName.trim()}
+                startIcon={isLoading ? <CircularProgress size={20} /> : <PersonAddIcon />}
+                sx={{ minWidth: 160 }}
+              >
+                {isLoading ? 'Creating...' : 'Create Athlete'}
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+    </Container>
   );
 };
 

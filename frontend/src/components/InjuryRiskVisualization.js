@@ -11,18 +11,18 @@ const InjuryRiskVisualization = ({ keypointLoads }) => {
     // Define positions for each body part on the silhouette
     // Positions are in percentages relative to the container
     return {
-      neck: { top: '8%', left: '50%' },
+      neck: { top: '12%', left: '50%' },
       leftShoulder: { top: '18%', left: '25%' },
       rightShoulder: { top: '18%', left: '75%' },
-      lowerBack: { top: '35%', left: '50%' },
+      // lowerBack: { top: '35%', left: '50%' },
       leftHip: { top: '45%', left: '35%' },
       rightHip: { top: '45%', left: '65%' },
-      leftKnee: { top: '65%', left: '35%' },
-      rightKnee: { top: '65%', left: '65%' },
-      leftAnkle: { top: '85%', left: '35%' },
-      rightAnkle: { top: '85%', left: '65%' },
-      leftWrist: { top: '50%', left: '15%' },
-      rightWrist: { top: '50%', left: '85%' }
+      leftKnee: { top: '60%', left: '35%' },
+      rightKnee: { top: '60%', left: '65%' },
+      leftAnkle: { top: '75%', left: '35%' },
+      rightAnkle: { top: '75%', left: '65%' },
+      leftWrist: { top: '45%', left: '15%' },
+      rightWrist: { top: '45%', left: '85%' }
     };
   };
 

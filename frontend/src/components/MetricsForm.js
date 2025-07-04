@@ -1,4 +1,11 @@
 import React from 'react';
+import {
+  Box,
+  Typography,
+  Grid,
+  TextField,
+  InputAdornment
+} from '@mui/material';
 
 const MetricsForm = ({ metrics, onMetricChange, disabled }) => {
   const metricDefinitions = {
@@ -13,31 +20,41 @@ const MetricsForm = ({ metrics, onMetricChange, disabled }) => {
   };
 
   return (
-    <div className="metrics-form">
-      <h4>Performance Metrics (Optional - defaults to 0)</h4>
-      <div className="metrics-input-grid">
+    <Box sx={{ mt: 3 }}>
+      <Typography variant="h5" component="h4" gutterBottom>
+        Performance Metrics
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        Defaults to 0 if left empty
+      </Typography>
+      
+      <Grid container spacing={6}>
         {Object.entries(metricDefinitions).map(([key, definition]) => (
-          <div key={key} className="metric-input-group">
-            <label htmlFor={key}>{definition.label}</label>
-            <div className="input-with-unit">
-              <input
-                type="number"
-                id={key}
-                value={metrics[key] || ''}
-                onChange={(e) => onMetricChange(key, e.target.value)}
-                placeholder="0"
-                min={definition.min}
-                max={definition.max}
-                step={definition.step}
-                disabled={disabled}
-                className="metric-input-field"
-              />
-              <span className="unit-label">{definition.unit}</span>
-            </div>
-          </div>
+          <Grid item xs={12} sm={6} md={4} key={key}>
+            <TextField
+              sx={{ width: '120%', maxWidth: '300px', '& .MuiInputLabel-root': {
+                  fontSize: '0.875rem'
+                } }}
+              type="number"
+              label={definition.label}
+              value={metrics[key] || ''}
+              onChange={(e) => onMetricChange(key, e.target.value)}
+              placeholder="0"
+              disabled={disabled}
+              variant="outlined"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">{definition.unit}</InputAdornment>,
+                inputProps: {
+                  min: definition.min,
+                  max: definition.max,
+                  step: definition.step
+                }
+              }}
+            />
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Box>
   );
 };
 

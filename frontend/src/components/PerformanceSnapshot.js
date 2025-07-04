@@ -2,6 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Grid,
+  Card,
+  CardContent,
+  Button,
+  TextField,
+  Chip,
+  Alert,
+  CircularProgress,
+  Breadcrumbs,
+  Link as MuiLink,
+  IconButton,
+  Divider
+} from '@mui/material';
+import {
+  ArrowBack as ArrowBackIcon,
+  Edit as EditIcon,
+  Save as SaveIcon,
+  Cancel as CancelIcon,
+  Delete as DeleteIcon
+} from '@mui/icons-material';
+import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -174,7 +199,7 @@ const PerformanceSnapshot = () => {
       },
       title: {
         display: true,
-        text: 'Key Performance Indicators',
+        // text: 'Key Performance Indicators',
         font: {
           size: 16,
           weight: 'bold',
@@ -197,155 +222,258 @@ const PerformanceSnapshot = () => {
   };
 
   if (isLoading) {
-    return <div className="loading">Loading session data...</div>;
+    return (
+      <Container maxWidth="lg">
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+          <CircularProgress size={60} />
+          <Typography variant="h6" sx={{ ml: 2 }}>Loading session data...</Typography>
+        </Box>
+      </Container>
+    );
   }
 
   if (error) {
     return (
-      <div className="error">
-        <h3>Error</h3>
-        <p>{error}</p>
-        <Link to="/" className="back-button">Back to Home</Link>
-      </div>
+      <Container maxWidth="lg">
+        <Box sx={{ py: 4 }}>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            <Typography variant="h6" gutterBottom>Error</Typography>
+            <Typography>{error}</Typography>
+          </Alert>
+          <Button component={Link} to="/" variant="contained" startIcon={<ArrowBackIcon />}>
+            Back to Home
+          </Button>
+        </Box>
+      </Container>
     );
   }
 
   if (!sessionData) {
     return (
-      <div className="error">
-        <h3>Session Not Found</h3>
-        <p>The requested session could not be found.</p>
-        <Link to="/" className="back-button">Back to Home</Link>
-      </div>
+      <Container maxWidth="lg">
+        <Box sx={{ py: 4 }}>
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            <Typography variant="h6" gutterBottom>Session Not Found</Typography>
+            <Typography>The requested session could not be found.</Typography>
+          </Alert>
+          <Button component={Link} to="/" variant="contained" startIcon={<ArrowBackIcon />}>
+            Back to Home
+          </Button>
+        </Box>
+      </Container>
     );
   }
 
   return (
-    <div className="snapshot-container">
-      <div className="navigation-header">
-        <Link to="/" className="back-button">← Back to Home</Link>
-        <div className="action-buttons">
-          {isEditing ? (
-            <>
-              <button 
-                className="save-button"
-                onClick={handleSaveChanges}
-                title="Save changes"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="save-icon">
-                  <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
-                </svg>
-                <span className="button-text">Save</span>
-              </button>
-              <button 
-                className="cancel-button"
-                onClick={handleEditToggle}
-                title="Cancel editing"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="cancel-icon">
-                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-                <span className="button-text">Cancel</span>
-              </button>
-            </>
-          ) : (
-            <button 
-              className="edit-button"
-              onClick={handleEditToggle}
-              title="Edit session data"
+    <Container maxWidth="lg">
+      <Box sx={{ py: 4 }}>
+        {/* Navigation Header */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Breadcrumbs>
+            <MuiLink 
+              component={Link} 
+              to="/" 
+              color="inherit" 
+              underline="hover"
+              sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
             >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="edit-icon">
-                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-              </svg>
-              <span className="button-text">Edit</span>
-            </button>
+              <ArrowBackIcon fontSize="small" />
+              Home
+            </MuiLink>
+            <Typography color="text.primary">Performance Snapshot</Typography>
+          </Breadcrumbs>
+          
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {isEditing ? (
+              <>
+                <Button 
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSaveChanges}
+                  startIcon={<SaveIcon />}
+                >
+                  Save
+                </Button>
+                <Button 
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleEditToggle}
+                  startIcon={<CancelIcon />}
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <Button 
+                variant="outlined"
+                color="primary"
+                onClick={handleEditToggle}
+                startIcon={<EditIcon />}
+              >
+                Edit
+              </Button>
+            )}
+            <Button 
+              variant="outlined"
+              color="error"
+              onClick={handleDeleteSession}
+              startIcon={<DeleteIcon />}
+            >
+              Delete
+            </Button>
+          </Box>
+        </Box>
+        
+        {/* Player Information */}
+        <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+          {isEditing ? (
+            <TextField
+              fullWidth
+              value={editedPlayerName}
+              onChange={(e) => setEditedPlayerName(e.target.value)}
+              variant="outlined"
+              size="large"
+              sx={{ mb: 2 }}
+            />
+          ) : (
+            <Typography variant="h3" component="h2" gutterBottom>
+              {sessionData.playerName}
+            </Typography>
           )}
-          <button 
-            className="delete-button"
-            onClick={handleDeleteSession}
-            title="Delete athlete session"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="trash-icon2">
-              <path d="M3 6l3 18h12l3-18h-18zm19-4v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.316c0 .901.73 2 1.631 2h5.711z"/>
-            </svg>
-            <span className="button-text">Delete</span>
-          </button>
-        </div>
-      </div>
-      
-      <div className="player-info">
-        {isEditing ? (
-          <input
-            type="text"
-            value={editedPlayerName}
-            onChange={(e) => setEditedPlayerName(e.target.value)}
-            className="player-name-input"
-          />
-        ) : (
-          <h2>{sessionData.playerName}</h2>
-        )}
-        <p className="session-date">
-          Session Date: {new Date(sessionData.sessionDate).toLocaleDateString()}
-        </p>
-        <p className="session-date">Session ID: #{sessionData.sessionId}</p>
-      </div>
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+            <Chip 
+              label={`Session Date: ${new Date(sessionData.sessionDate).toLocaleDateString()}`}
+              variant="outlined"
+              color="primary"
+            />
+            <Chip 
+              label={`Session ID: #${sessionData.sessionId}`}
+              variant="outlined"
+              color="secondary"
+            />
+          </Box>
+        </Paper>
 
-      <div className="content-grid">
-        <div className="metrics-section">
-          <h3>Performance Metrics</h3>
-          
-          <div className="metrics-grid">
-            {Object.entries(isEditing ? editedMetrics : sessionData.metrics).map(([key, value]) => (
-              <div key={key} className="metric-card">
-                {isEditing ? (
-                  <div className="metric-edit">
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={editedMetrics[key]}
-                      onChange={(e) => handleMetricChange(key, e.target.value)}
-                      className="metric-input"
-                    />
-                    <div className="metric-label">{getMetricLabel(key)}</div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="metric-value">{formatMetricValue(key, value)}</div>
-                    <div className="metric-label">{getMetricLabel(key)}</div>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
+        <Grid container spacing={4}>
+          {/* Left Half: Performance Metrics + Chart */}
+          <Grid item xs={12} md={7}>
+            <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
+              <Typography variant="h4" component="h3" gutterBottom>
+                Performance Metrics
+              </Typography>
+              {/* Metrics Grid: 2 rows, equal size boxes */}
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 4 }}>
+                <Grid container spacing={2}>
+                  {Object.entries(isEditing ? editedMetrics : sessionData.metrics).slice(0, 4).map(([key, value]) => (
+                    <Grid item xs={3} key={key}>
+                      <Card variant="outlined" sx={{ textAlign: 'center', p: 1.5 , height: '100px', width: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        
+                        {isEditing ? (
+                          <>
+                            <TextField
+                              type="number"
+                              inputProps={{ step: 0.1 }}
+                              value={editedMetrics[key]}
+                              onChange={(e) => handleMetricChange(key, e.target.value)}
+                              size="small"
+                              fullWidth
+                              sx={{ mb: 1 }}
+                            />
+                            <Typography variant="caption" color="text.secondary">
+                              {getMetricLabel(key)}
+                            </Typography>
+                          </>
+                        ) : (
+                          <>
+                            <Typography variant="h6" color="primary" gutterBottom>
+                              {formatMetricValue(key, value)}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {getMetricLabel(key)}
+                            </Typography>
+                          </>
+                        )}
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+                <Grid container spacing={2}>
+                  {Object.entries(isEditing ? editedMetrics : sessionData.metrics).slice(4, 8).map(([key, value]) => (
+                    <Grid item xs={3} key={key}>
+                      <Card variant="outlined" sx={{ textAlign: 'center', p: 1.5 , height: '100px', width: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        {isEditing ? (
+                          <>
+                            <TextField
+                              type="number"
+                              inputProps={{ step: 0.1 }}
+                              value={editedMetrics[key]}
+                              onChange={(e) => handleMetricChange(key, e.target.value)}
+                              size="small"
+                              fullWidth
+                              sx={{ mb: 1 }}
+                            />
+                            <Typography variant="caption" color="text.secondary">
+                              {getMetricLabel(key)}
+                            </Typography>
+                          </>
+                        ) : (
+                          <>
+                            <Typography variant="h6" color="primary" gutterBottom>
+                              {formatMetricValue(key, value)}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {getMetricLabel(key)}
+                            </Typography>
+                          </>
+                        )}
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+              {/* Chart */}
+              <Box sx={{ height: 300, mb: 2 }}>
+                <Bar data={createChartData(isEditing ? editedMetrics : sessionData.metrics)} options={chartOptions} />
+              </Box>
+            </Paper>
+          </Grid>
 
-          <div className="chart-container">
-            <Bar data={createChartData(isEditing ? editedMetrics : sessionData.metrics)} options={chartOptions} />
-          </div>
-        </div>
-
-        <div className="injury-risk-section">
-          <h3>Injury Risk Assessment</h3>
-          <p>Body load indicators based on biomechanical analysis</p>
-          
-          <InjuryRiskVisualization keypointLoads={sessionData.keypointLoads} />
-          
-          <div className="legend">
-            <div className="legend-item">
-              <div className="legend-color low"></div>
-              <span>Low Risk (1-50)</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color moderate"></div>
-              <span>Moderate Risk (51-80)</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color high"></div>
-              <span>High Risk (81-100)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          {/* Right Half: Injury Risk Assessment */}
+          <Grid item xs={12} md={5}>
+            <Paper elevation={3} sx={{ p: 3, height: '100%', width: '117%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+              <Typography variant="h4" component="h3" gutterBottom>
+                Injury Risk Assessment
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Body load indicators
+              </Typography>
+              <InjuryRiskVisualization keypointLoads={sessionData.keypointLoads} />
+              <Divider sx={{ my: 2 }} />
+              {/* Legend */}
+              <Box>
+                <Typography variant="subtitle2" gutterBottom>
+                  Risk Levels
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 16, height: 16, bgcolor: '#4CAF50', borderRadius: 1 }} />
+                    <Typography variant="body2">Low Risk (1-50)</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 16, height: 16, bgcolor: '#FF9800', borderRadius: 1 }} />
+                    <Typography variant="body2">Moderate Risk (51-80)</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 16, height: 16, bgcolor: '#F44336', borderRadius: 1 }} />
+                    <Typography variant="body2">High Risk (81-100)</Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   );
 };
 

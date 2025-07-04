@@ -1,9 +1,48 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { CssBaseline, AppBar, Toolbar, Typography, Button, Container, Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import './App.css';
 import HomePage from './components/HomePage';
 import PerformanceSnapshot from './components/PerformanceSnapshot';
 import AthleteCreation from './components/AthleteCreation';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#667eea',
+    },
+    secondary: {
+      main: '#764ba2',
+    },
+    background: {
+      default: '#f5f7fa',
+    },
+  },
+  typography: {
+    h1: {
+      fontSize: '2rem',
+      fontWeight: 600,
+    },
+  },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: '16px',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '16px',
+        },
+      },
+    },
+  },
+});
 
 function AppContent() {
   const location = useLocation();
@@ -14,7 +53,6 @@ function AppContent() {
       <header className="App-header">
         <div className="header-content">
           <div className="header-left">
-            <h1>Performance Tracker</h1>
             <p>Advanced Performance & Injury Risk Analysis</p>
           </div>
           {!isCreateAthletePage && (
@@ -44,9 +82,12 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <AppContent />
+      </Router>
+    </ThemeProvider>
   );
 }
 
